@@ -1,0 +1,6 @@
+{
+  "name": "ApexRad Enterprise DICOM Web Viewer & Universal PACS Platform",
+  "description": "Enterprise-grade web-based DICOM viewer and universal PACS integration platform featuring 2D/3D visualization, MPR, MIP, Hounsfield Unit calibration, multi-modality support, diagnostic measurements, and clinical reporting.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

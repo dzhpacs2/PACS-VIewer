@@ -1,0 +1,1219 @@
+# MASTER SOFTWARE DEVELOPMENT PROMPT
+## Design, Develop, and Deploy an Enterprise-Grade Advanced DICOM Web Viewer and Universal PACS Integration Platform
+
+### 1. ROLE AND RESPONSIBILITIES
+
+Act as a Senior Medical Imaging Software Architect, DICOM Standards Specialist, Full-Stack Developer, Healthcare IT Infrastructure Engineer, PACS Integration Specialist, UI/UX Designer, Cybersecurity Engineer, DevOps Engineer, and Software Testing Specialist.
+
+Your responsibility is to design, architect, develop, implement, test, document, and deploy a fully functional, enterprise-grade, browser-based DICOM Viewer.
+
+The application must offer advanced medical imaging visualization and diagnostic capabilities comparable to leading commercial DICOM web viewers, including MedDream and other professional radiology workstations.
+
+Do not create merely a demonstration, prototype, static dashboard, or UI mock-up.
+
+Develop an actual working software application with real DICOM image processing, PACS connectivity, functional diagnostic tools, user management, database integration, security, and deployment capabilities.
+
+Work systematically, step by step. Provide the source code, configuration files, installation scripts, database schemas, deployment instructions, and troubleshooting documentation.
+
+---
+
+# 2. PROJECT OBJECTIVE
+
+Develop a universal, browser-based DICOM Viewer that can:
+
+1. Connect to different manufacturers' PACS servers.
+2. Retrieve DICOM studies, series, and instances.
+3. Display medical images directly in modern web browsers.
+4. Support advanced radiology visualization tools.
+5. Support CT, MRI, X-ray, CR, DX, US, MG, PET, NM, XA, RF, SC, ECG, SR, and other applicable DICOM modalities.
+6. Support 2D, 3D, MPR, MIP, MinIP, and advanced volume rendering.
+7. Support radiology measurements, annotations, image manipulation, and reporting.
+8. Support multiple concurrent users.
+9. Support secure authentication and authorization.
+10. Run on Windows Server and Linux Server.
+11. Integrate with existing hospital information systems, RIS, HIS, and PACS infrastructure.
+12. Work on-premises, in private cloud, and in supported hybrid environments.
+
+The software must have a modular architecture so additional features, modalities, integrations, and plugins can be introduced without redesigning the entire system.
+
+---
+
+# 3. TECHNOLOGY STACK
+
+Evaluate and select a production-ready technology stack.
+
+Preferred technologies:
+
+### Frontend
+- React.js with TypeScript.
+- Cornerstone3D for DICOM image rendering.
+- OHIF Viewer architecture and reusable components where appropriate.
+- HTML5, CSS3, and modern JavaScript.
+- WebGL2 and WebGPU where supported.
+- Web Workers for intensive processing.
+- WebAssembly for suitable high-performance image processing.
+- Responsive design.
+
+### Backend
+Select an appropriate backend architecture using one of:
+- Node.js with TypeScript.
+- Python with FastAPI.
+- Java with Spring Boot.
+- .NET with ASP.NET Core.
+
+Use a modular service architecture.
+
+### DICOM Integration
+Evaluate:
+- DICOMweb.
+- DICOM DIMSE networking.
+- DCMTK.
+- Orthanc.
+- DICOMweb-compatible PACS interfaces.
+- DICOM gateways and protocol adapters.
+
+### Database
+- PostgreSQL for application metadata.
+- Redis for caching and session management.
+- Optional database indexing for study and series metadata.
+
+### Reverse Proxy and Web Server
+- NGINX.
+- Apache HTTP Server.
+- IIS for Windows deployments where appropriate.
+
+### Containerization
+- Docker.
+- Docker Compose.
+- Optional Kubernetes for large enterprise deployments.
+
+Explain the advantages and limitations of the selected stack and document the final technology choices.
+
+---
+
+# 4. UNIVERSAL PACS CONNECTIVITY
+
+This is one of the most important requirements.
+
+The viewer must support integration with different PACS manufacturers, not just one particular PACS product.
+
+Develop a configurable PACS connectivity management module.
+
+### 4.1 DICOMweb Support
+
+Implement the following DICOMweb services:
+
+- QIDO-RS: Query DICOM studies, series, and instances.
+- WADO-RS: Retrieve DICOM studies, series, and instances.
+- STOW-RS: Store DICOM instances where supported.
+- WADO-URI: Retrieve DICOM objects using supported URI-based endpoints.
+
+Support:
+- DICOM JSON.
+- Multipart DICOM responses.
+- DICOM bulk data.
+- Transfer syntax negotiation.
+- Authentication headers.
+- HTTPS.
+- Configurable endpoint paths.
+- Pagination.
+- Query filters.
+
+### 4.2 Traditional DICOM DIMSE Support
+
+Implement a server-side DICOM integration gateway to communicate with traditional PACS servers.
+
+Support:
+
+- C-ECHO.
+- C-FIND.
+- C-MOVE.
+- C-GET.
+- C-STORE.
+- Association negotiation.
+- AE Title configuration.
+- IP address configuration.
+- Port configuration.
+- Transfer syntax negotiation.
+- TLS where supported.
+- Connection timeouts.
+- Retry mechanisms.
+- Network error handling.
+
+IMPORTANT: Browser clients must not attempt direct traditional DICOM DIMSE connections. Use a secure server-side gateway to communicate with DIMSE-based PACS servers.
+
+### 4.3 PACS Compatibility
+
+Design configurable integration adapters for PACS systems from different vendors, including:
+
+- Orthanc.
+- dcm4chee.
+- Conquest.
+- GE Healthcare PACS.
+- Philips IntelliSpace PACS.
+- Siemens syngo-based PACS.
+- Sectra PACS.
+- Agfa Enterprise Imaging.
+- Fujifilm Synapse.
+- Carestream PACS.
+- Canon Medical PACS.
+- Other standards-compliant DICOM and DICOMweb systems.
+
+Do not claim guaranteed compatibility with every manufacturer's system without testing.
+
+For each integration, document:
+- Supported protocols.
+- Required configuration.
+- Authentication method.
+- Query capabilities.
+- Retrieval capabilities.
+- Storage capabilities.
+- Known limitations.
+
+### 4.4 PACS Server Management Interface
+
+Create an administration dashboard to add, edit, delete, enable, disable, and test PACS connections.
+
+Required configuration fields:
+
+| Field | Description |
+|---|---|
+| PACS Name | Friendly server name |
+| Manufacturer | PACS manufacturer |
+| AE Title | Local or remote AE Title |
+| IP Address | PACS server address |
+| Port | DICOM communication port |
+| Local AE Title | Viewer gateway AE Title |
+| DICOMweb URL | QIDO/WADO/STOW endpoint |
+| Username | Authentication username |
+| Password | Securely stored credential |
+| TLS | Enable secure transport |
+| Connection Timeout | Connection timeout |
+| Default PACS | Set preferred server |
+| Status | Connected / Disconnected / Error |
+
+Include:
+- Test Connection.
+- DICOM C-ECHO test.
+- DICOMweb health check.
+- PACS configuration validation.
+- Connection logs.
+- Last successful connection.
+- Error diagnostics.
+
+---
+
+# 5. ADVANCED DICOM VIEWER WORKSPACE
+
+Develop a professional radiology workstation interface.
+
+### 5.1 Main Interface
+
+Create the following application layout:
+
+1. Top navigation toolbar.
+2. Patient information panel.
+3. Study and series browser.
+4. Main image viewing canvas.
+5. Image manipulation toolbar.
+6. Measurement toolbar.
+7. Layout selection panel.
+8. MPR and 3D workspace.
+9. Annotation panel.
+10. Report and results panel.
+11. Image metadata panel.
+12. Status and notification bar.
+
+Provide configurable panels, resizable windows, fullscreen viewing, keyboard shortcuts, dark mode, and customizable layouts.
+
+### 5.2 Study Browser
+
+Display:
+
+- Patient ID.
+- Patient name.
+- Patient age.
+- Patient sex.
+- Accession number.
+- Study date and time.
+- Referring physician.
+- Performing physician.
+- Study description.
+- Modality.
+- Number of series.
+- Number of instances.
+- Institution.
+- Study status.
+
+Provide filtering and searching by:
+
+- Patient name.
+- Patient ID.
+- Accession number.
+- Study date.
+- Modality.
+- Institution.
+- Referring physician.
+- Study description.
+
+### 5.3 Series Browser
+
+Display series thumbnails, image counts, modality, series description, and acquisition information.
+
+Allow:
+- Series selection.
+- Drag-and-drop series loading.
+- Series sorting.
+- Series comparison.
+- Synchronised scrolling.
+- Thumbnail preview.
+- Multi-series viewing.
+
+---
+
+# 6. ADVANCED IMAGE VIEWING TOOLS
+
+Implement fully functional imaging tools.
+
+### 6.1 Basic Image Manipulation
+
+- Zoom In.
+- Zoom Out.
+- Pan.
+- Window Width.
+- Window Level.
+- Invert.
+- Reset Image.
+- Fit to Window.
+- Actual Size.
+- Rotate 90° clockwise.
+- Rotate 90° anticlockwise.
+- Free Rotation.
+- Horizontal Flip.
+- Vertical Flip.
+- Image Reset.
+- Image Synchronisation.
+
+### 6.2 Window Level Presets
+
+Provide modality-specific presets.
+
+For CT:
+
+- Lung.
+- Mediastinum.
+- Abdomen.
+- Bone.
+- Brain.
+- Subdural.
+- Liver.
+- Soft Tissue.
+- High Resolution Lung.
+
+Allow custom window width and window level values.
+
+Support saving and restoring custom presets.
+
+### 6.3 Image Navigation
+
+- Mouse wheel scrolling.
+- Slice navigation.
+- Keyboard slice navigation.
+- Cine playback.
+- Cine speed adjustment.
+- Reverse cine.
+- Frame-by-frame navigation.
+- Image stack navigation.
+- Multiframe navigation.
+- Synchronised scrolling across viewports.
+
+### 6.4 Advanced Measurement Tools
+
+Implement:
+
+- Linear measurement.
+- Distance measurement.
+- Multi-segment measurement.
+- Angle measurement.
+- Cobb angle.
+- Cobb angle with multiple lines.
+- Elliptical ROI.
+- Rectangular ROI.
+- Circular ROI.
+- Freehand ROI.
+- Polygon ROI.
+- Area measurement.
+- Perimeter measurement.
+- Pixel value measurement.
+- CT Hounsfield Unit measurement.
+- Mean, minimum, maximum, and standard deviation.
+- Length and area calculations.
+- Bidimensional measurements.
+- Ratio calculations.
+- Cobb angle measurement.
+- Spine measurements.
+
+Provide measurement labels, editable annotations, unit conversion, and persistent storage.
+
+### 6.5 Annotation Tools
+
+- Text annotation.
+- Arrow annotation.
+- Point annotation.
+- Freehand drawing.
+- Highlighting.
+- Measurements with comments.
+- Annotation visibility toggle.
+- Annotation editing.
+- Annotation deletion.
+- Save annotations.
+- Export annotations.
+
+Where possible, support DICOM Structured Reporting and DICOM Presentation States.
+
+---
+
+# 7. ADVANCED MULTIPLANAR RECONSTRUCTION (MPR)
+
+Implement advanced MPR functionality.
+
+Support:
+
+- Axial reconstruction.
+- Coronal reconstruction.
+- Sagittal reconstruction.
+- Oblique reconstruction.
+- Double-oblique reconstruction.
+- Cross-reference lines.
+- Linked crosshairs.
+- Synchronized navigation.
+- MPR thickness adjustment.
+- Slab reconstruction.
+- MPR rotation.
+- MPR orientation controls.
+
+Allow users to view axial, coronal, and sagittal images simultaneously.
+
+Cross-reference lines must update dynamically across all related viewports.
+
+---
+
+# 8. ADVANCED 3D VISUALIZATION
+
+Develop an advanced 3D rendering engine.
+
+Support:
+
+### Volume Rendering
+- 3D Volume Rendering.
+- Volume rotation.
+- Volume zoom.
+- Volume pan.
+- Preset selection.
+- Custom transfer functions.
+- Opacity adjustment.
+- Colour mapping.
+- Volume cropping.
+
+### Projection Techniques
+- MIP (Maximum Intensity Projection).
+- MinIP (Minimum Intensity Projection).
+- Average Intensity Projection.
+- Slab MIP.
+- Slab MinIP.
+
+### Advanced 3D Tools
+- Volume clipping.
+- Clipping planes.
+- 3D crosshairs.
+- 3D orientation cube.
+- Volume segmentation.
+- Surface rendering.
+- Multi-volume display where supported.
+
+### Segmentation
+- Brush segmentation.
+- Eraser.
+- Threshold segmentation.
+- Region growing.
+- Polygon segmentation.
+- Segmentation editing.
+- Segmentation visibility controls.
+- Segmentation export.
+- DICOM SEG support.
+
+Ensure 3D operations are optimised for large CT and MRI datasets.
+
+---
+
+# 9. ADVANCED MODALITY-SPECIFIC FEATURES
+
+Provide modality-aware tools.
+
+### CT
+- HU measurements.
+- Bone and lung windows.
+- MPR.
+- MIP/MinIP.
+- Volume rendering.
+- CT angiography viewing.
+- Vessel visualisation.
+
+### MRI
+- Multi-sequence comparison.
+- T1/T2/FLAIR viewing.
+- Diffusion imaging.
+- ADC map display.
+- DWI comparison.
+- Sequence synchronisation.
+- Multiplanar navigation.
+
+### X-ray / CR / DX
+- Image enhancement.
+- Window/Level.
+- Inversion.
+- Zoom and pan.
+- Measurement tools.
+- Side-by-side comparison.
+- Previous-study comparison.
+
+### Ultrasound
+- Multiframe cine.
+- Video-like frame navigation.
+- Measurement tools.
+- Annotation.
+- Doppler image display where supported.
+
+### Mammography
+- Multi-view comparison.
+- Left/right breast synchronisation.
+- Previous examination comparison.
+- Hanging protocols.
+- Presentation State support.
+
+### PET / NM
+- Fusion imaging.
+- PET/CT comparison.
+- SUV measurements.
+- Multi-modality synchronisation.
+- Fusion opacity adjustment.
+
+### XA / RF
+- Cine playback.
+- Frame navigation.
+- Frame rate adjustment.
+- Multi-frame synchronisation.
+
+### ECG and Structured Reports
+- Waveform visualisation where supported.
+- Structured report display.
+- Report measurements.
+- DICOM SR interpretation.
+
+Clearly document any modality-specific limitations.
+
+---
+
+# 10. ADVANCED RADIOLOGY WORKFLOW
+
+Implement a professional workflow management system.
+
+Support:
+
+- Patient worklist.
+- Study worklist.
+- Unreported studies.
+- In-progress studies.
+- Completed studies.
+- Verified studies.
+- Critical findings.
+- Study assignment.
+- Radiologist assignment.
+- Study priority.
+- Worklist filtering.
+- Previous examination comparison.
+- Hanging protocols.
+- User-specific preferences.
+
+Where applicable, support DICOM Modality Worklist integration and HL7/FHIR integration through configurable interfaces.
+
+---
+
+# 11. RADIOLOGY REPORTING MODULE
+
+Create an integrated reporting system.
+
+Features:
+
+- Structured radiology reports.
+- Free-text reporting.
+- Report templates.
+- Modality-specific templates.
+- Findings section.
+- Impression section.
+- Clinical history.
+- Comparison with previous study.
+- Recommendations.
+- Critical findings.
+- Report saving.
+- Report editing.
+- Report approval.
+- Report verification.
+- Report printing.
+- PDF export.
+
+Support integration with RIS and HIS through documented APIs.
+
+Provide optional speech recognition integration using replaceable services.
+
+---
+
+# 12. ADVANCED WORKSPACE FEATURES
+
+Implement:
+
+- Single viewport.
+- 1×2 layout.
+- 2×1 layout.
+- 2×2 layout.
+- 3×3 layout.
+- 4×4 layout.
+- Custom layouts.
+- Drag-and-drop series assignment.
+- Synchronized viewports.
+- Reference line display.
+- Compare previous studies.
+- Dual-monitor support.
+- Fullscreen mode.
+- Customizable toolbar.
+- Keyboard shortcuts.
+- Save workspace preferences.
+- User-specific hanging protocols.
+
+---
+
+# 13. USER MANAGEMENT AND SECURITY
+
+Develop enterprise-grade security.
+
+### Authentication
+- Username/password.
+- Secure session management.
+- Optional Active Directory integration.
+- LDAP.
+- SSO.
+- OAuth 2.0 / OpenID Connect.
+- Multi-factor authentication.
+
+### Role-Based Access Control
+
+Create roles:
+
+1. System Administrator.
+2. PACS Administrator.
+3. Radiologist.
+4. Radiographer.
+5. Referring Physician.
+6. Technician.
+7. Auditor.
+8. Read-only User.
+
+Configure role-specific permissions.
+
+### Security
+- HTTPS/TLS.
+- Secure cookies.
+- CSRF protection.
+- XSS protection.
+- SQL injection prevention.
+- API authentication.
+- Rate limiting.
+- Audit logs.
+- Session expiration.
+- Password hashing.
+- Encryption at rest.
+- Secure PACS credentials.
+- Access control.
+- Patient data protection.
+- Backup and recovery.
+
+Never expose PACS credentials or unrestricted DICOM endpoints directly to the browser.
+
+Design for applicable healthcare privacy regulations, including local legal requirements and relevant international standards.
+
+---
+
+# 14. DICOM DATA MANAGEMENT
+
+Implement:
+
+- DICOM metadata extraction.
+- Study indexing.
+- Series indexing.
+- Instance indexing.
+- DICOM tag viewer.
+- Metadata search.
+- DICOM transfer syntax handling.
+- Lossless decompression.
+- Supported lossy decompression.
+- JPEG.
+- JPEG-LS.
+- JPEG 2000.
+- RLE.
+- Deflated Explicit VR where supported.
+- Encapsulated documents.
+- Multiframe DICOM.
+- DICOM SEG.
+- DICOM SR.
+- DICOM Presentation States.
+
+Create a configurable metadata display.
+
+Provide original DICOM download only to authorised users.
+
+Maintain original image fidelity and ensure that derived images are clearly identified.
+
+---
+
+# 15. PERFORMANCE OPTIMISATION
+
+The application must support large datasets and concurrent users.
+
+Implement:
+
+- Progressive image loading.
+- Lazy loading.
+- Thumbnail caching.
+- Image caching.
+- Metadata caching.
+- Web Workers.
+- WebGL acceleration.
+- Efficient memory management.
+- Request prioritisation.
+- Parallel image retrieval.
+- Adaptive rendering.
+- Network retry.
+- Cache eviction.
+- Large-volume streaming where supported.
+
+Test with:
+- Small X-ray studies.
+- Large CT studies.
+- MRI studies with multiple sequences.
+- Multiframe ultrasound.
+- Large PET/CT studies.
+- High-resolution mammography.
+- Multiple concurrent users.
+
+Provide benchmarks for loading time, rendering performance, memory consumption, and concurrent-user capacity.
+
+---
+
+# 16. ADMINISTRATION DASHBOARD
+
+Create a comprehensive administrative dashboard.
+
+### Dashboard Modules
+- System overview.
+- PACS server management.
+- DICOM connectivity.
+- User management.
+- Role management.
+- Workstation management.
+- Database management.
+- Cache management.
+- Storage management.
+- Application settings.
+- API configuration.
+- System logs.
+- Audit logs.
+- Error logs.
+- Performance monitoring.
+- Backup management.
+- Restore management.
+- License management if required.
+
+### System Monitoring
+Display:
+- CPU usage.
+- RAM usage.
+- Disk utilisation.
+- Network activity.
+- Active sessions.
+- PACS connection status.
+- API response time.
+- Failed requests.
+- Database status.
+- Cache status.
+- Application uptime.
+
+---
+
+# 17. API AND INTEGRATION ARCHITECTURE
+
+Develop documented REST APIs.
+
+Where appropriate, support:
+
+- DICOMweb.
+- HL7 v2.
+- FHIR.
+- OAuth 2.0.
+- OpenID Connect.
+- WebSocket.
+- RIS integration.
+- HIS integration.
+- PACS integration.
+- Worklist integration.
+
+Provide:
+- OpenAPI/Swagger documentation.
+- API authentication.
+- API versioning.
+- Request validation.
+- Error response standards.
+- Integration examples.
+- API testing collections.
+
+---
+
+# 18. WINDOWS SERVER DEPLOYMENT
+
+The application must be deployable on Windows Server.
+
+Support suitable configurations for:
+
+- Windows Server 2019.
+- Windows Server 2022.
+- Windows Server 2025.
+
+Provide a complete Windows installation package and deployment guide.
+
+### Required Components
+- Web server configuration.
+- Backend service.
+- Frontend application.
+- Database.
+- DICOM gateway.
+- Redis if required.
+- SSL certificate configuration.
+- Firewall configuration.
+- Windows service management.
+- Logging.
+- Backup.
+
+### Windows Deployment Instructions
+
+Provide:
+
+1. Windows Server preparation.
+2. Required software installation.
+3. Runtime installation.
+4. Database installation.
+5. DICOM gateway installation.
+6. Backend deployment.
+7. Frontend deployment.
+8. IIS or NGINX configuration.
+9. HTTPS configuration.
+10. Firewall port configuration.
+11. PACS connection configuration.
+12. Windows service registration.
+13. Automatic service startup.
+14. Application testing.
+15. Troubleshooting.
+
+Create PowerShell scripts for:
+- Installation.
+- Configuration.
+- Service creation.
+- Service startup.
+- Service restart.
+- Backup.
+- Restore.
+- Upgrade.
+- Uninstallation.
+
+---
+
+# 19. LINUX SERVER DEPLOYMENT
+
+Support the following Linux distributions:
+
+- Ubuntu Server 22.04 LTS.
+- Ubuntu Server 24.04 LTS.
+- Debian.
+- Rocky Linux.
+- AlmaLinux.
+- RHEL-compatible distributions.
+
+### Linux Deployment Instructions
+
+Provide:
+
+1. Operating system preparation.
+2. Required package installation.
+3. Runtime installation.
+4. Database installation.
+5. Redis installation if required.
+6. DICOM gateway deployment.
+7. Backend installation.
+8. Frontend build and deployment.
+9. NGINX configuration.
+10. SSL certificate installation.
+11. Firewall configuration.
+12. Systemd service creation.
+13. PACS connectivity configuration.
+14. Logging configuration.
+15. Backup and restore.
+16. Upgrade procedures.
+17. Troubleshooting.
+
+Create Bash installation scripts and systemd service definitions.
+
+---
+
+# 20. DOCKER AND CONTAINER DEPLOYMENT
+
+Provide Docker-based deployment.
+
+Create:
+
+- Dockerfile for frontend.
+- Dockerfile for backend.
+- Dockerfile for DICOM gateway if applicable.
+- Docker Compose configuration.
+- PostgreSQL container.
+- Redis container if required.
+- NGINX reverse proxy.
+- Persistent storage volumes.
+- Health checks.
+- Environment configuration.
+- Container restart policies.
+
+Provide separate configurations for:
+
+- Development.
+- Testing.
+- Staging.
+- Production.
+
+Include a complete installation command and verification procedure.
+
+---
+
+# 21. NETWORK AND PORT CONFIGURATION
+
+Create a comprehensive network connectivity table.
+
+Document:
+
+- HTTP/HTTPS ports.
+- DICOM listener port.
+- PACS communication ports.
+- Database ports.
+- Redis port.
+- API ports.
+- WebSocket ports.
+- Administrative ports.
+
+Clearly distinguish between:
+- Internal network ports.
+- Externally exposed ports.
+- PACS communication ports.
+- Administrative access ports.
+
+Never expose databases or unrestricted DICOM services to the public internet.
+
+---
+
+# 22. BACKUP AND DISASTER RECOVERY
+
+Implement:
+
+- Database backup.
+- Configuration backup.
+- User configuration backup.
+- Application backup.
+- Annotation backup.
+- Reporting backup.
+- Cache recovery.
+- Log backup.
+- Restore verification.
+
+Provide automated backup scripts.
+
+Document RPO, RTO, disaster recovery, and off-site backup options.
+
+The PACS remains the authoritative imaging archive unless an explicitly configured storage function is implemented.
+
+---
+
+# 23. SOFTWARE TESTING AND QUALITY ASSURANCE
+
+Create a complete testing framework.
+
+### Functional Testing
+Test all viewing and measurement tools.
+
+### DICOM Testing
+Test:
+- DICOMweb connectivity.
+- DIMSE connectivity.
+- Query.
+- Retrieve.
+- Store.
+- Metadata parsing.
+- Transfer syntax decoding.
+- Multiframe handling.
+- Large image handling.
+
+### Compatibility Testing
+Test with multiple PACS implementations.
+
+### Security Testing
+Test:
+- Authentication.
+- Authorisation.
+- API security.
+- Session security.
+- File access.
+- Patient data isolation.
+- Audit logging.
+
+### Performance Testing
+Test:
+- Single user.
+- Multiple users.
+- Large studies.
+- High network latency.
+- High image volume.
+- Server resource utilisation.
+
+### Clinical Validation
+Validate image orientation, pixel values, geometry, calibration, measurements, and modality-specific rendering against trusted reference implementations.
+
+Do not market the viewer as a clinically validated diagnostic workstation until appropriate clinical, regulatory, and quality requirements have been fulfilled.
+
+---
+
+# 24. USER DOCUMENTATION
+
+Produce complete documentation.
+
+### Administrator Manual
+- Installation.
+- Configuration.
+- PACS setup.
+- User management.
+- Security.
+- Backup.
+- Monitoring.
+- Troubleshooting.
+
+### Radiologist User Manual
+- Login.
+- Patient search.
+- Study opening.
+- Series navigation.
+- Image manipulation.
+- Measurement.
+- MPR.
+- 3D rendering.
+- Annotations.
+- Reporting.
+- Study comparison.
+
+### Developer Documentation
+- Source code architecture.
+- Backend structure.
+- Frontend structure.
+- API documentation.
+- Database schema.
+- DICOM integration.
+- Plugin development.
+- Build instructions.
+- Deployment.
+
+### Deployment Documentation
+Create separate detailed deployment manuals for:
+- Windows Server.
+- Linux Server.
+- Docker.
+- Reverse proxy.
+- SSL.
+- PACS integration.
+- Production hardening.
+- Backup and disaster recovery.
+
+Include screenshots, architecture diagrams, workflows, tables, configuration examples, and troubleshooting procedures.
+
+---
+
+# 25. REQUIRED PROJECT DELIVERABLES
+
+Produce a complete working software project containing:
+
+1. Full frontend source code.
+2. Full backend source code.
+3. DICOM integration gateway.
+4. PACS connectivity module.
+5. Database schema and migrations.
+6. User authentication system.
+7. Administration dashboard.
+8. DICOM image viewer.
+9. Advanced image processing tools.
+10. MPR module.
+11. 3D rendering module.
+12. Measurement and annotation modules.
+13. Reporting module.
+14. API documentation.
+15. Docker configuration.
+16. Windows installation scripts.
+17. Linux installation scripts.
+18. Database backup and restore scripts.
+19. SSL and NGINX/IIS configuration examples.
+20. Testing scripts and test reports.
+21. Complete technical documentation.
+22. Complete administrator manual.
+23. Complete end-user manual.
+24. Production deployment guide.
+
+---
+
+# 26. STEP-BY-STEP DEVELOPMENT PLAN
+
+Develop the application in the following phases.
+
+**Phase 1: Requirements and Architecture**
+- Analyse requirements.
+- Design architecture.
+- Select technologies.
+- Create database schema.
+- Create system architecture diagrams.
+- Define DICOM integration strategy.
+
+**Phase 2: Infrastructure and Backend**
+- Set up backend.
+- Configure database.
+- Implement authentication.
+- Create REST APIs.
+- Implement PACS adapters.
+- Implement DICOM gateway.
+
+**Phase 3: Frontend**
+- Create application interface.
+- Develop patient browser.
+- Develop study browser.
+- Develop series browser.
+- Integrate DICOM rendering engine.
+
+**Phase 4: Image Viewing**
+- Implement basic viewing tools.
+- Implement window/level.
+- Implement measurements.
+- Implement annotations.
+- Implement cine playback.
+- Implement synchronised viewing.
+
+**Phase 5: Advanced Imaging**
+- Implement MPR.
+- Implement MIP/MinIP.
+- Implement 3D volume rendering.
+- Implement segmentation.
+- Implement fusion imaging where supported.
+
+**Phase 6: Workflow and Reporting**
+- Implement worklists.
+- Implement reporting.
+- Implement hanging protocols.
+- Implement previous-study comparison.
+- Implement user preferences.
+
+**Phase 7: Security and Administration**
+- Implement RBAC.
+- Implement audit logs.
+- Implement administration dashboard.
+- Implement monitoring.
+- Implement backup and recovery.
+
+**Phase 8: Testing**
+- Functional testing.
+- DICOM interoperability testing.
+- PACS compatibility testing.
+- Security testing.
+- Performance testing.
+- Clinical image validation.
+
+**Phase 9: Deployment**
+- Windows Server deployment.
+- Linux Server deployment.
+- Docker deployment.
+- SSL configuration.
+- Firewall configuration.
+- Production hardening.
+
+**Phase 10: Final Delivery**
+- Provide complete source code.
+- Provide installation packages.
+- Provide scripts.
+- Provide documentation.
+- Provide test results.
+- Provide production deployment checklist.
+
+---
+
+# 27. DEVELOPMENT RULES
+
+Follow these mandatory instructions:
+
+1. Develop real working functionality, not static UI demonstrations.
+2. Never create non-functional toolbar buttons.
+3. Never simulate PACS connectivity with fake data in production.
+4. Never use placeholder image rendering as a substitute for actual DICOM decoding.
+5. Follow applicable DICOM standards.
+6. Preserve original DICOM pixel data and patient metadata.
+7. Clearly identify derived and modified images.
+8. Implement error handling for all external PACS connections.
+9. Protect patient information.
+10. Use modular, maintainable, documented source code.
+11. Provide installation instructions for every dependency.
+12. Provide actual configuration examples.
+13. Do not omit required source files.
+14. Test every major feature before marking it complete.
+15. Maintain a development progress checklist.
+16. Identify incomplete or unsupported functionality honestly.
+17. Do not claim universal PACS compatibility without interoperability testing.
+18. Do not expose sensitive credentials in source code.
+19. Ensure the application can be upgraded without losing user data or configuration.
+20. Make the application suitable for enterprise healthcare environments.
+
+---
+
+# 28. FINAL ACCEPTANCE CRITERIA
+
+The application will be considered complete only when:
+
+- It successfully connects to independently configured DICOMweb PACS servers.
+- It successfully connects to traditional DIMSE PACS through its server-side gateway.
+- It can search and retrieve real DICOM studies.
+- It can render actual DICOM images.
+- It supports all implemented image manipulation and measurement tools.
+- It provides functional MPR and 3D tools.
+- It supports the specified modalities and accurately documents limitations.
+- It supports secure multi-user access.
+- It has a functional administrative dashboard.
+- It can be deployed on supported Windows Server and Linux environments.
+- It can be deployed through Docker.
+- It has tested backup and restore procedures.
+- It has complete installation and administration documentation.
+- It passes the agreed functional, security, interoperability, and performance tests.
+
+**IMPORTANT FINAL INSTRUCTION:**
+
+Begin with Phase 1. First produce the complete software architecture, technology selection report, system component diagram, DICOM connectivity architecture, database design, deployment architecture, and detailed development roadmap.
+
+After approval, proceed phase by phase.
+
+For every phase, provide the actual implementation, source code, file structure, configuration files, testing instructions, and verification results.
+
+Do not attempt to deliver the entire application as one incomplete code dump. Build it incrementally, test each module, maintain a working application throughout development, and deliver a fully integrated production-ready system.
