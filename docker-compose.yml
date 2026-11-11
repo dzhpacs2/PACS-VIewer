@@ -1,0 +1,64 @@
+version: '3.8'
+
+# ==============================================================================
+# ApexRad Enterprise DICOM Web Viewer & PACS Gateway - Docker Compose
+# Integrates ApexRad with optional local Orthanc PACS Research Archive
+# ==============================================================================
+
+services:
+  apexrad-viewer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: apexrad-enterprise
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DICOM_CACHE_DIR=/data/dicom_cache
+    volumes:
+      - apexrad_cache:/data/dicom_cache
+    networks:
+      - medical_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/system/metrics"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      orthanc-pacs:
+        condition: service_started
+
+  # Built-in Orthanc PACS Server for testing & standalone archiving
+  orthanc-pacs:
+    image: orthancteam/orthanc:latest
+    container_name: orthanc-core
+    restart: unless-stopped
+    ports:
+      - "4242:4242"   # DICOM C-STORE / DIMSE Port
+      - "8042:8042"   # DICOMweb REST API Port
+    environment:
+      - ORTHANC__NAME=Orthanc_Research_Archive
+      - ORTHANC__DICOM_WEB_ENABLED=true
+      - ORTHANC__STORAGE_DIRECTORY=/var/lib/orthanc/db
+      - ORTHANC__DICOM_CHECK_CALLED_AET=false
+      - ORTHANC__DICOM_AET=ORTHANC
+      - ORTHANC__DICOM_PORT=4242
+      - ORTHANC__HTTP_PORT=8042
+      - ORTHANC__REGISTERED_USERS={"orthanc_admin":"orthanc_password"}
+    volumes:
+      - orthanc_db:/var/lib/orthanc/db
+    networks:
+      - medical_net
+
+volumes:
+  apexrad_cache:
+    driver: local
+  orthanc_db:
+    driver: local
+
+networks:
+  medical_net:
+    driver: bridge

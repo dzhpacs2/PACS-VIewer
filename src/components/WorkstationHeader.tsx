@@ -55,7 +55,7 @@ export const WorkstationHeader: React.FC<WorkstationHeaderProps> = ({
         <div className="flex items-center gap-2">
           <span className="font-bold text-slate-100 tracking-tight text-sm font-sans flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-sm bg-teal-500 inline-block" />
-            ApexRad
+            RADOX &reg;
           </span>
           <span className="text-[10px] uppercase font-mono text-slate-400 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">
             Enterprise PACS v4.2

@@ -314,6 +314,61 @@ app.get('/api/system/metrics', (_req: Request, res: Response) => {
   });
 });
 
+// Serve help directory for MS Word .docx documentation downloads
+app.use('/help', express.static(path.join(__dirname, 'help')));
+
+// List available MS Word documentation files in /help
+app.get('/api/docs', (_req: Request, res: Response) => {
+  const docsList = [
+    {
+      filename: 'RADOX_Windows_and_Linux_Installation_Guide.docx',
+      title: 'RADOX® Windows & Linux Installation & Configuration Guide',
+      category: 'Cross-Platform Install',
+      format: 'Microsoft Word Document (.docx)',
+      size: '24 KB',
+      description: 'Comprehensive installation guide for Windows Server (PowerShell, NSSM Windows Service, Defender Firewall) and Linux (systemd daemon, unprivileged user, UFW, dcmtk).',
+      downloadUrl: '/help/RADOX_Windows_and_Linux_Installation_Guide.docx',
+    },
+    {
+      filename: 'RADOX_Enterprise_Deployment_Guide.docx',
+      title: 'RADOX® Enterprise Deployment & Infrastructure Manual',
+      category: 'Deployment',
+      format: 'Microsoft Word Document (.docx)',
+      size: '22 KB',
+      description: 'Bare-metal, Windows Service, Ubuntu systemd, Docker, Kubernetes, and Nginx reverse proxy architecture.',
+      downloadUrl: '/help/RADOX_Enterprise_Deployment_Guide.docx',
+    },
+    {
+      filename: 'RADOX_PACS_Administrator_Manual.docx',
+      title: 'RADOX® PACS & VNA Integration Manual',
+      category: 'Administration',
+      format: 'Microsoft Word Document (.docx)',
+      size: '21 KB',
+      description: 'DIMSE C-ECHO, C-FIND, C-MOVE, DICOMweb WADO-RS/QIDO-RS, HL7 ADT/ORM, and FHIR ImagingStudy endpoints.',
+      downloadUrl: '/help/RADOX_PACS_Administrator_Manual.docx',
+    },
+    {
+      filename: 'RADOX_Radiology_User_Manual.docx',
+      title: 'RADOX® Radiologist & Clinician User Manual',
+      category: 'Clinical',
+      format: 'Microsoft Word Document (.docx)',
+      size: '20 KB',
+      description: 'Viewport manipulation, MPR (Axial/Coronal/Sagittal), HU calibrations, calibrated measurements, and reporting.',
+      downloadUrl: '/help/RADOX_Radiology_User_Manual.docx',
+    },
+    {
+      filename: 'RADOX_Disaster_Recovery_and_Security.docx',
+      title: 'RADOX® Security, Compliance & Disaster Recovery Manual',
+      category: 'Security & DR',
+      format: 'Microsoft Word Document (.docx)',
+      size: '19 KB',
+      description: 'HIPAA/GDPR compliance, AES-256 at rest, TLS 1.3 in transit, automated backup rotations, and cold/hot site failover.',
+      downloadUrl: '/help/RADOX_Disaster_Recovery_and_Security.docx',
+    },
+  ];
+  res.json({ success: true, documents: docsList });
+});
+
 // Vite middleware in dev or static files in production
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
@@ -331,7 +386,7 @@ async function startServer() {
   }
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[ApexRad] Enterprise DICOM Web Viewer & PACS Gateway running at http://0.0.0.0:${PORT}`);
+    console.log(`[RADOX] Enterprise DICOM Web Viewer & PACS Gateway running at http://0.0.0.0:${PORT}`);
   });
 }
 
